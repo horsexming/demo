@@ -1,6 +1,8 @@
 package com.mbm.controller;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbm.domian.Factory;
+import com.mbm.domian.Tgoods;
 import com.mbm.services.TgoodService;
 import com.mbm.services.factoryservices.FactoryServices;
+import com.mbm.util.tongjitu.EchartData;
+import com.mbm.util.tongjitu.Series;
 
 @Controller
 public class HomeController {
@@ -131,10 +136,34 @@ public class HomeController {
 		public String zhu() {		
 			return "tubiao/zhu";
 		}
+		
+		@RequestMapping("/zhe")
+		public String zhe() {
+			System.out.println("a"+tgoodService.queryForList2().size());
+			return "tubiao/zhe";
+		}
 		 @RequestMapping("/queryForList")
-		    public @ResponseBody List<Map<String, Object>> queryForList() {
+		 public @ResponseBody List<Map<String, Object>> queryForList() {
 			 System.out.println(tgoodService.queryForList().size());
 		        return tgoodService.queryForList();
-		    }
+		}
+		 
+		@RequestMapping("/showEchartLine")
+		 @ResponseBody
+		 public EchartData lineData() {
+		     System.out.println("折线图");
+		     List<String> category = new ArrayList<String>();
+		     List<Integer> serisData=new ArrayList<Integer>();
+		     List<Tgoods> list = tgoodService.queryForList2();
+		     for (Tgoods totalNum : list) {
+		         category.add(totalNum.getGoodsName());
+		         serisData.add(totalNum.getGoodsT());
+		     }
+		     List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "总数" }));// 数据分组
+		     List<Series> series = new ArrayList<Series>();// 纵坐标
+		     series.add(new Series("总数", "line", serisData));		
+		     EchartData data = new EchartData(legend, category, series);
+		     return data;
+		 }
 
 }

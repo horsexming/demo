@@ -6,4 +6,7 @@
 	 <select id="queryForList" resultType="map">
         select goodsName, goodsT from t_goods
     </select>
+     <select id="selForList" resultType="com.mbm.domian.Tgoods">
+        select * from t_goods
+    </select>
 </mapper>

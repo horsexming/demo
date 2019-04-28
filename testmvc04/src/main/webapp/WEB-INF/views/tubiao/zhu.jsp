@@ -10,8 +10,10 @@
 <html>
 <head>
     <title>柱状图</title>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/ui/echarts/echarts-3.2.3/dist/echarts.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/ui/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/ui/echarts/echarts-3.2.3/dist/echarts.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/ui/echarts/echarts-3.2.3/options/cfgopts.js"></script>
+    
 </head>
 <script type="text/javascript">
         $(function() {
@@ -85,6 +87,9 @@
             });
         });
     </script>
+    <script type="text/javascript">
+   
+</script>
 <body>
     <!-- 柱状图容器 -->
     <div id="main" style="width:600px; height:400px;"></div>

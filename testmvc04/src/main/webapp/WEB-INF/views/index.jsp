@@ -20,6 +20,7 @@
 			<td><a href="<%=request.getContextPath()%>/yanzhengma02">手机短信验证码</a></td>
 			<td><a href="<%=request.getContextPath()%>/rili">日历</a></td>
 			<td><a href="<%=request.getContextPath()%>/zhu">柱状图</a></td>
+			<td><a href="<%=request.getContextPath()%>/zhe">折线图</a></td>
 		</tr>
 	</table>
 	

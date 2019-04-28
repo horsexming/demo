@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mbm.dao.TgoodDao;
+import com.mbm.domian.Tgoods;
 
 @Service("tgoodService")
 public class TgoodService {
@@ -15,6 +16,10 @@ public class TgoodService {
 	TgoodDao tgoodDao;
 	public List<Map<String, Object>> queryForList() {
         return tgoodDao.queryForList();
+    }
+	
+	public List<Tgoods> queryForList2() {
+        return tgoodDao.selForList();
     }
 
 }
