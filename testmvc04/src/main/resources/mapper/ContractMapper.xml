@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbm.dao.contractDao.ContractDao">
+	<resultMap type="com.mbm.domian.Contract" id="contractRM">
+		<id property="id" column="c_id"/>		
+		<result property="offeror" column="c_offeror"/>
+		<result property="contractNo" column="c_contractNo"/>		
+		<result property="signingTimeDate" column="c_signingTimeDate"/>
+		<result property="inputBy" column="c_inputBy"/>
+		<result property="checkBy" column="c_checkBy"/>
+		<result property="inspector" column="c_inspector"/>
+		<result property="totalAmount" column="c_totalAmount"/>
+		<result property="importNum" column="c_importNum"/>
+		<result property="crequest" column="c_crequest"/>
+		<result property="customName" column="c_customName"/>
+		<result property="pnum" column="c_pnum"/>
+		<result property="extnum" column="c_extnum"/>
+		<result property="deliveryPeriod" column="c_deliveryPeriod"/>
+		<result property="shipTime" column="c_shipTime"/>
+		<result property="tradeTerms" column="c_tradeTerms"/>
+		<result property="remark" column="c_remark"/>
+		<result property="printStyle" column="c_printStyle"/>
+		<result property="oldState" column="c_oldState"/>
+		<result property="state" column="c_state"/>
+		<result property="outState" column="c_outState"/>
+		<result property="createBy" column="c_createBy"/>
+		<result property="createDept" column="c_createDept"/>
+		<result property="createTime" column="c_createTime"/>
+	</resultMap>
+	<resultMap type="com.mbm.vo.ContractVo" id="contractVORM" extends="contractRM">
+	<!-- 合同和货物（一对多） -->
+	<collection property="contractProducts" ofType="com.mbm.vo.ContractProductVo">
+		<id property="id" column="pef_pf_p_id"/>		
+		<result property="productNo" column="pef_pf_p_productNo"/>		
+		<result property="productImage" column="pef_pf_p_productImage"/>
+		<result property="productDesc" column="pef_pf_p_productDesc"/>
+		<result property="cnumber" column="pef_pf_p_cnumber"/>
+		<result property="boxNum" column="pef_pf_p_boxNum"/>
+		<result property="packingUnit" column="pef_pf_p_packingUnit"/>
+		<result property="price" column="pef_pf_p_price"/>
+		<result property="amount" column="pef_pf_p_amount"/>
+		<result property="finished" column="pef_pf_p_finished"/>
+		<result property="exts" column="pef_pf_p_exts"/>
+		<result property="orderNo" column="pef_pf_p_orderNo"/>
+		<!-- 货物和生产厂家（多对一） -->
+		<association property="factory" javaType="com.mbm.domian.Factory">
+			<id property="id" column="pef_pf_pf_id"/>		
+			<result property="fullName" column="pef_pf_pf_fullName"/>
+			<result property="factoryName" column="pef_pf_pf_factoryName"/>		
+			<result property="contacts" column="pef_pf_pf_contacts"/>
+		</association>
+		<!-- 货物和附件（一对多） -->
+		<collection property="extCproducts" ofType="com.mbm.vo.ExtCproductVo">
+			<id property="id" column="pef_ef_e_id"/>		
+			<result property="ctype" column="pef_ef_e_ctype"/>
+			<result property="productNo" column="pef_ef_e_productNo"/>		
+			<result property="productImage" column="pef_ef_e_productImage"/>
+			<result property="productDesc" column="pef_ef_e_productDesc"/>
+			<result property="cnumber" column="pef_ef_e_cnumber"/>
+			<result property="packingUnit" column="pef_ef_e_packingUnit"/>
+			<result property="price" column="pef_ef_e_price"/>
+			<result property="amount" column="pef_ef_e_amount"/>
+			<result property="productRequest" column="pef_ef_e_productRequest"/>
+			<result property="orderNo" column="pef_ef_e_orderNo"/>
+			<!-- 附件和生产厂家（多对一） -->
+			<association property="factory" javaType="com.mbm.domian.Factory">
+				<id property="id" column="pef_ef_ef_id"/>		
+				<result property="fullName" column="pef_ef_ef_fullName"/>
+				<result property="factoryName" column="pef_ef_ef_factoryName"/>		
+				<result property="contacts" column="pef_ef_ef_contacts"/>
+			</association>
+		</collection>
+	</collection>
+	</resultMap>
+	<!-- 查询合同下的信息（货物，附件） -->
+	<select id="selectAll" parameterType="String" resultMap="contractVORM">
+		select
+		(SELECT COUNT(*) FROM contract_product_c WHERE contractId=c.id)as c_pnum,
+		(SELECT COUNT(*) FROM EXT_CPRODUCT_C WHERE contractProductId in
+		(select id from contract_product_c where contractId = c.id ))as c_extnum,
+		(
+			COALESCE(
+				(SELECT SUM(price*cnumber)FROM contract_product_c WHERE contractId=c.id),0
+			)
+		+
+			COALESCE(
+				(SELECT SUM(price*cnumber) FROM EXT_CPRODUCT_C WHERE contractProductId in
+				(select id from contract_product_c where contractId = c.id )),0
+			)
+		)as c_totalAmount,
+		c.id as c_id,c.offeror as c_offeror,c.contractNo as c_contractNo,c.signingTimeDate as c_signingTimeDate,
+		c.inputBy as c_inputBy,c.checkBy as c_checkBy,c.inspector as c_inspector,c.totalAmount as c_totalAmount,
+		c.importNum as c_importNum,c.crequest as c_crequest,c.customName as c_customName,c.pnum as c_pnum,c.extnum as c_extnum,
+		c.deliveryPeriod as c_deliveryPeriod,c.shipTime as c_shipTime,c.tradeTerms as c_tradeTerms,c.remark as c_remark,
+		c.printStyle as c_printStyle,c.oldState as c_oldState,c.state as c_state,c.outState as c_outState,c.createBy as c_createBy,
+		c.createDept as c_createDept,c.createTime as c_createTime,
+		pef.pf_p_id as pef_pf_p_id,pef.pf_p_productNo as pef_pf_p_productNo,
+		pef.pf_p_productImage as pef_pf_p_productImage,pef.pf_p_productDesc as pef_pf_p_productDesc,
+		pef.pf_p_cnumber as pef_pf_p_cnumber,pef.pf_p_boxNum as pef_pf_p_boxNum,
+		pef.pf_p_packingUnit as pef_pf_p_packingUnit,pef.pf_p_price as pef_pf_p_price,
+		pef.pf_p_amount as pef_pf_p_amount,pef.pf_p_finished as pef_pf_p_finished,
+		pef.pf_p_exts as pef_pf_p_exts,pef.pf_p_orderNo as pef_pf_p_orderNo,
+		pef.pf_pf_id as pef_pf_pf_id,pef.pf_pf_fullName as pef_pf_pf_fullName,
+		pef.pf_pf_contacts as pef_pf_pf_contacts,pef.pf_pf_factoryName as pef_pf_pf_factoryName,
+
+		pef.ef_e_id as pef_ef_e_id,pef.ef_e_ctype as pef_ef_e_ctype,
+		pef.ef_e_productNo as pef_ef_e_productNo,pef.ef_e_productImage as pef_ef_e_productImage,
+		pef.ef_e_productDesc as pef_ef_e_productDesc,pef.ef_e_cnumber as pef_ef_e_cnumber,
+		pef.ef_e_packingUnit as pef_ef_e_packingUnit,pef.ef_e_price as pef_ef_e_price,
+		pef.ef_e_amount as pef_ef_e_amount,pef.ef_e_productRequest as pef_ef_e_productRequest,
+		pef.ef_e_orderNo as pef_ef_e_orderNo,pef.ef_ef_id as pef_ef_ef_id,
+		pef.ef_ef_fullName as pef_ef_ef_fullName,pef.ef_ef_contacts as pef_ef_ef_contacts,
+		pef.ef_ef_factoryName as pef_ef_ef_factoryName
+	from contract_c c LEFT JOIN
+		(select 
+			pf.p_id as pf_p_id,pf.p_contractId as pf_p_contractId,pf.p_factoryName as pf_p_factoryName,pf.p_productNo as pf_p_productNo,
+			pf.p_productImage as pf_p_productImage,pf.p_productDesc as pf_p_productDesc,pf.p_cnumber as pf_p_cnumber,pf.p_boxNum as pf_p_boxNum,
+			pf.p_packingUnit as pf_p_packingUnit,pf.p_price as pf_p_price,pf.p_amount as pf_p_amount,pf.p_finished as pf_p_finished,
+			pf.p_exts as pf_p_exts,pf.p_orderNo as pf_p_orderNo,
+			pf.pf_id as pf_pf_id,pf.pf_fullName as pf_pf_fullName,pf.pf_contacts as pf_pf_contacts,pf.pf_factoryName as pf_pf_factoryName,
+
+			ef.e_id as ef_e_id,ef.e_contractProductId as ef_e_contractProductId,ef.e_factoryId as ef_e_factoryId,
+			ef.e_factoryName as ef_e_factoryName,ef.e_ctype as ef_e_ctype,ef.e_productNo as ef_e_productNo,ef.e_productImage as ef_e_productImage,
+			ef.e_productDesc as ef_e_productDesc,ef.e_cnumber as ef_e_cnumber,ef.e_packingUnit as ef_e_packingUnit,
+			ef.e_price as ef_e_price,ef.e_amount as ef_e_amount,ef.e_productRequest as ef_e_productRequest,ef.e_orderNo as ef_e_orderNo,
+			ef.ef_id as ef_ef_id,ef.ef_fullName as ef_ef_fullName,ef.ef_contacts as ef_ef_contacts,ef.ef_factoryName as ef_ef_factoryName
+		FROM
+			(select 
+			p.id AS p_id,p.contractId AS p_contractId,p.factoryName as p_factoryName,p.productNo as p_productNo,
+			p.productImage as p_productImage,p.productDesc as p_productDesc,p.cnumber as p_cnumber,p.boxNum as p_boxNum,
+			p.packingUnit as p_packingUnit,p.price as p_price,p.amount as p_amount,p.finished as p_finished,p.exts as p_exts,p.orderNo as p_orderNo,
+			f.id as pf_id,f.fullName as pf_fullName,f.contacts as pf_contacts,f.factoryName as pf_factoryName	
+			from contract_product_c p LEFT JOIN factory_c f on p.factoryId = f.id
+			) pf LEFT JOIN
+			(select 
+			e.id AS e_id,e.contractProductId as e_contractProductId,e.factoryId as e_factoryId,e.factoryName as e_factoryName,e.ctype as e_ctype,e.productNo as e_productNo,e.productImage as e_productImage,e.productDesc as e_productDesc,e.cnumber as e_cnumber,e.packingUnit as e_packingUnit,e.price as e_price,e.amount as e_amount,e.productRequest as e_productRequest,e.orderNo as e_orderNo, 
+			f.id as ef_id,f.fullName as ef_fullName,f.contacts as ef_contacts,f.factoryName AS ef_factoryName
+			from ext_cproduct_c e LEFT JOIN factory_c f on f.id=e.factoryId 
+			) ef ON ef.e_contractProductId = pf.p_id
+	)pef ON c.id = pef.pf_p_contractId
+	where c.id = #{id}
+	</select>
+	
+	
+	<select id="ContractList" resultType="com.mbm.domian.Contract">
+	 	select (SELECT COUNT(*) FROM contract_product_c WHERE contractId=c.id)as pnum,
+	 		(SELECT COUNT(*) FROM EXT_CPRODUCT_C WHERE contractProductId in
+	 		(select id from contract_product_c where contractId = c.id ))as extnum,
+	(
+			COALESCE(
+			(SELECT SUM(price*cnumber)FROM contract_product_c WHERE contractId=c.id),0
+			)
+	+
+			COALESCE(
+				(SELECT SUM(price*cnumber) FROM EXT_CPRODUCT_C WHERE contractProductId in
+				(select id from contract_product_c where contractId = c.id )),0
+			)
+	)as totalAmount,
+	c.id,c.offeror,c.contractNo,c.signingTimeDate,c.inputBy,c.checkBy,c.inspector,c.importNum,c.crequest,c.customName,c.deliveryPeriod,c.shipTime,c.tradeTerms,c.remark,c.printStyle,c.oldState,c.state,c.outState,c.createBy,c.createDept,c.createTime
+	 from contract_c c;
+	 </select>	
+	 <insert id="insertContract" parameterType="com.mbm.domian.Contract">
+	 	insert into contract_c(id,offeror,contractNo,signingTimeDate,inputBy,checkBy,inspector,totalAmount,importNum,crequest,customName,deliveryPeriod,shipTime,tradeTerms,remark,printStyle,oldState,state,outState,createBy,createDept,createTime) 
+	 	values(#{id},#{offeror},#{contractNo},#{signingTimeDate},#{inputBy},#{checkBy},#{inspector},#{totalAmount},#{importNum},#{crequest},#{customName},#{deliveryPeriod},#{shipTime},#{tradeTerms},#{remark},#{printStyle},#{oldState},#{state},#{outState},#{createBy},#{createDept},#{createTime})
+	 </insert>
+	 <select id="selectContract" resultType="com.mbm.domian.Contract" parameterType="String">
+	 	select * from contract_c where id = #{id}
+	 </select>
+	 <update id="updatecontract" parameterType="com.mbm.domian.Contract">
+	 	update contract_c 
+		<set>
+			<if test="offeror!=null">
+                offeror = #{offeror},
+            </if>
+            <if test="contractNo!=null">
+                contractNo = #{contractNo},
+            </if>
+ 			<if test="signingTimeDate!=null">
+                signingTimeDate = #{signingTimeDate},
+            </if>
+            <if test="inputBy!=null">
+                inputBy = #{inputBy},
+            </if>
+            <if test="checkBy!=null">
+                checkBy = #{checkBy},
+            </if>
+             <if test="inspector!=null">
+                inspector = #{inspector},
+            </if>
+             <if test="totalAmount!=null">
+                totalAmount = #{totalAmount},
+            </if>
+            <if test="importNum!=null">
+                importNum = #{importNum},
+            </if>
+            <if test="crequest!=null">
+                crequest = #{crequest},
+            </if>
+            <if test="customName!=null">
+                customName = #{customName},
+            </if>
+            <if test="deliveryPeriod!=null">
+                deliveryPeriod = #{deliveryPeriod},
+            </if>
+            <if test="shipTime!=null">
+                shipTime = #{shipTime},
+            </if>
+            <if test="tradeTerms!=null">
+                tradeTerms = #{tradeTerms},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark},
+           </if>
+           <if test="printStyle!=null">
+                printStyle = #{printStyle},
+            </if>
+            <if test="oldState!=null">
+                oldState = #{oldState},
+            </if>
+            <if test="state!=null">
+                state = #{state},
+            </if>
+            <if test="outState!=null">
+                outState = #{outState},
+            </if>
+            <if test="createBy!=null">
+                createBy = #{createBy},
+            </if>
+            <if test="createDept!=null">
+                createDept = #{createDept},
+            </if>
+            <if test="createTime!=null">
+                createTime = #{createTime},
+            </if>          
+        </set>
+        where id = #{id}
+	 </update>
+	  <!-- 删除一条 -->
+	 <delete id="deleteByid" parameterType="String">
+	 	delete from contract_c
+	 	where id=#{id}
+	 </delete>
+	 <!-- 批量删除 -->
+	 <delete id="deletes" parameterType="String">
+	 	delete c,p,e from contract_c c left join contract_product_c p on c.id=p.contractId
+	 				left join EXT_CPRODUCT_C e on e.contractProductId=p.id
+	 	where c.id in
+	 	<foreach collection="array" item="id" open="(" close=")" separator=",">
+	 		#{id}
+	 	</foreach>
+	 </delete>
+	 <!--  销售合同上报取消 -->
+	<update id="updateState" parameterType="map">
+		update contract_c set state = #{state}
+        where id in
+	 	<foreach collection="ids" item="id" open="(" close=")" separator=",">
+	 		#{id}
+	 	</foreach>
+	</update>	
+</mapper>

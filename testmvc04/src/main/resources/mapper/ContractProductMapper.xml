@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbm.dao.contractDao.ContractProductDao">
+	<select id="selectContractProduct" resultType="com.mbm.domian.ContractProduct" parameterType="map">
+	 	select * from contract_product_c where 
+	 	<if test="contractId != null"> contractId=#{contractId}</if>
+	 </select>
+	  <insert id="insertContractProduct" parameterType="com.mbm.domian.ContractProduct">
+	 	insert into contract_product_c(id,contractId,factoryId,factoryName,productNo,productImage
+					,cnumber,packingUnit,loadingRate,price,orderNo
+					,boxNum,productDesc,amount,outNumber,finished
+					,exts) 
+	 	values(#{id},#{contractId},#{factoryId},#{factoryName},#{productNo},#{productImage}
+			    ,#{cnumber},#{packingUnit},#{loadingRate},#{price},#{orderNo}
+			    ,#{boxNum},#{productDesc},#{amount},#{outNumber}
+			    ,#{finished},#{exts})
+	 </insert>
+	 <!-- 通过ID查询 -->
+	 <select id="selectProductById" resultType="com.mbm.domian.ContractProduct" parameterType="String">
+	 	select * from contract_product_c where id=#{id}
+	 </select>
+	  <update id="updateProduct" parameterType="com.mbm.domian.ContractProduct">
+	 	update contract_product_c 
+		<set>
+		<if test="contractId!=null"> contractId = #{contractId}, </if>
+		<if test="factoryId!=null">factoryId = #{factoryId},</if>
+ 		<if test="factoryName!=null">factoryName = #{factoryName},</if>
+		<if test="productNo!=null">productNo = #{productNo},</if>
+		<if test="productImage!=null">productImage= #{productImage},</if>
+		<if test="cnumber!=null"> cnumber = #{cnumber},</if>
+		<if test="packingUnit!=null">packingUnit = #{packingUnit},</if>
+		<if test="loadingRate!=null">loadingRate = #{loadingRate},</if>
+		<if test="price!=null">price = #{price},</if>
+		<if test="orderNo!=null">orderNo = #{orderNo},</if>
+		<if test="boxNum!=null">boxNum = #{boxNum},</if>
+		<if test="productDesc!=null">productDesc = #{productDesc},</if>
+		<if test="amount!=null">amount = #{amount},</if>
+		<if test="outNumber!=null">outNumber = #{outNumber},</if>
+		<if test="finished!=null">finished = #{finished},</if>
+		<if test="exts!=null">exts = #{exts},</if>       
+        </set>
+        where id = #{id}
+	 </update>
+	 <delete id="deleteProduct" parameterType="String">
+	 	delete from contract_product_c where id=#{id}
+	 </delete>
+	 <!-- 购销合同下批量删除货物 -->
+	 <delete id="deleteBycontractId" parameterType="String">
+	 	delete from contract_product_c
+	 	where contractId in
+	 	<foreach collection="array" item="contractId" open="(" close=")" separator=",">
+	 		#{contractId}
+	 	</foreach>
+	 </delete>	
+</mapper>

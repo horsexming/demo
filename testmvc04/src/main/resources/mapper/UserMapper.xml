@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbm.dao.UserDao">
+	<resultMap type="com.mbm.domian.User" id="userResult">
+    <id column="id"  property="id"/>
+    <result column="username"  property="username"/>
+    <result column="password"  property="password"/>
+    <result column="age" property="age"/>
+    <result column="sex" property="sex"/>
+	<result column="phone" property="phone"/>
+  <association property="roleid" javaType="com.mbm.domian.Role">
+    <result column="id" property="id"/>
+    <result column="role" property="role"/>
+  </association>
+  </resultMap>	
+	 <select id="FindUserByName" parameterType="java.lang.String" resultType="com.mbm.domian.User">
+	 	select * from user where username LIKE CONCAT('%',#{username},'%')
+	 </select>
+	 <insert id="saveUser" parameterType="com.mbm.domian.User">
+	 	insert into user(username,password,age,sex,phone) 
+	 	values(#{username},#{password},#{age},#{sex},#{phone})
+	 </insert>
+	 
+	 <delete id="deleteUser" parameterType="java.lang.Integer" >
+	 	delete from user where id = #{id}
+	 </delete>
+	 
+	 <select id="findUser" parameterType="java.lang.Integer" resultType="com.mbm.domian.User">
+	 	select * from user where id = #{id}
+	 </select>
+	 
+	  <update id="UpdateUser" parameterType="com.mbm.domian.User">
+	 	 update user
+        <set>
+            <if test="username!=null">
+                username = #{username},
+            </if>
+            <if test="age!=null">
+                age = #{age},
+            </if>
+ 			<if test="phone!=null">
+                phone = #{phone},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex},
+            </if>
+            <if test="password!=null">
+                password = #{password},
+            </if>
+        </set>
+        where id = #{id}
+	 </update>
+	
+</mapper>

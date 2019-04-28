@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbm.dao.contractDao.ExtCproductDao">
+	<select id="selCproductByproductId" resultType="com.mbm.domian.ExtCproduct" parameterType="map">
+		select * from EXT_CPRODUCT_C where contractProductId = #{contractProductId}
+	</select>
+	<select id="selEXTCProductById" resultType="com.mbm.domian.ExtCproduct" parameterType="String">
+		select * from EXT_CPRODUCT_C where id = #{id}
+	</select>
+	 <insert id="insertEXTCProduct" parameterType="com.mbm.domian.ExtCproduct">
+	 	insert into EXT_CPRODUCT_C(id,contractProductId,factoryId,factoryName,productNo,productImage,productDesc
+					,cnumber,packingUnit,price,amount,productRequest,orderNo,ctype) 
+	 	values(#{id},#{contractProductId},#{factoryId},#{factoryName},#{productNo},#{productImage},#{productDesc}
+			    ,#{cnumber},#{packingUnit},#{price},#{amount},#{productRequest},#{orderNo},#{ctype})
+	 </insert>
+	 <update id="updateEXTCProduct" parameterType="com.mbm.domian.ExtCproduct">
+	 	update EXT_CPRODUCT_C 
+		<set>
+		<if test="contractProductId!=null"> contractProductId = #{contractProductId}, </if>
+		<if test="factoryId!=null">factoryId = #{factoryId},</if>
+ 		<if test="factoryName!=null">factoryName = #{factoryName},</if>
+		<if test="productNo!=null">productNo = #{productNo},</if>
+		<if test="productImage!=null">productImage= #{productImage},</if>
+		<if test="productDesc!=null"> productDesc = #{productDesc},</if>
+		<if test="cnumber!=null">cnumber = #{cnumber},</if>
+		<if test="packingUnit!=null">packingUnit = #{packingUnit},</if>
+		<if test="price!=null">price = #{price},</if>
+		<if test="amount!=null">amount = #{amount},</if>
+		<if test="productRequest!=null">productRequest = #{productRequest},</if>
+		<if test="orderNo!=null">orderNo = #{orderNo},</if>
+		<if test="ctype!=null">ctype = #{ctype},</if>      
+        </set>
+        where id = #{id}
+	 </update>
+	 <delete id="deleteEXTCProduct" parameterType="String">
+	  delete from EXT_CPRODUCT_C where id = #{id}
+	 </delete>
+	 
+	 <delete id="deleteEXTCPByProductId" parameterType="String">
+	  delete from EXT_CPRODUCT_C where contractProductId = #{contractProductId}
+	 </delete>
+	 <!-- 批量删除货物下的合同 -->
+	 <delete id="deleteByProductId" parameterType="String">
+	 	delete from contract_product_c 
+	 	where contractProductId in
+	 	<foreach collection="array" item="contractProductId" open="(" close=")" separator=",">
+	 		#{contractProductId}
+	 	</foreach>
+	 </delete>
+	 
+	 <!-- 查询附件数	 -->
+	 <select id="selectnum" parameterType="String">
+	 	select count(*) as num from contract_product_c
+	 	where contractProductId = #{contractProductId}
+	 </select>
+	 
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbm.dao.contractDao.OutProductDao">
+	<!-- 出货表查询 -->
+	<select id="selectOutProduct" parameterType="map" resultType="com.mbm.vo.OutProductVo">
+		select 
+		c.id,c.customName,c.contractNo,c.deliveryPeriod,c.shipTime,c.tradeTerms,
+		p.productNo,CONCAT(p.cnumber,p.packingUnit)AS cnumber,p.factoryName
+		from contract_c c LEFT JOIN contract_product_c p
+		on c.id = p.contractId
+		where DATE_FORMAT(c.shipTime,'%Y-%m')=#{shipTime}	
+	</select>
+	
+</mapper>

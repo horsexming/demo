@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.mbm.dao.PackingList.PackingListDao">
+	<resultMap type="com.mbm.domian.PackingList" id="packingListRM">
+		<id property="id" column="id"/>
+		<result property="seller" column="seller"/>
+		<result property="buyer" column="buyer"/>
+		<result property="invoiceNo" column="invoiceNo"/>
+		<result property="invoiceDate" column="invoiceDate"/>
+		<result property="marks" column="marks"/>
+		<result property="descriptions" column="descriptions"/>
+		
+		<result property="exportIds" column="exportIds"/>
+		<result property="exportNos" column="exportNos"/>
+		
+		<result property="state" column="state"/>
+		<result property="createBy" column="createBy"/>
+		<result property="createDept" column="createDept"/>
+		<result property="createTime" column="createTime"/>
+	</resultMap>
+	<select id="find" resultMap="packingListRM">
+		select * from PackingList
+	</select>
+	<insert id="insertPackingList" parameterType="com.mbm.domian.PackingList">
+		insert into PackingList
+			(id,seller,buyer,invoiceNo,invoiceDate,marks,descriptions,
+			 exportIds,exportNos,state,createBy,createDept,createTime
+			)
+		values
+			(
+			#{id},#{seller},#{buyer},#{invoiceNo},#{invoiceDate},#{marks},#{descriptions},
+			#{exportIds},#{exportNos},#{state},#{createBy},#{createDept},#{createTime}
+			)
+	</insert>
+</mapper>
