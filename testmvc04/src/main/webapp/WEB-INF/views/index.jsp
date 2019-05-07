@@ -21,6 +21,8 @@
 			<td><a href="<%=request.getContextPath()%>/rili">日历</a></td>
 			<td><a href="<%=request.getContextPath()%>/zhu">柱状图</a></td>
 			<td><a href="<%=request.getContextPath()%>/zhe">折线图</a></td>
+			<td><a href="<%=request.getContextPath()%>/baohan">测试页面包含</a></td>
+			<td><a href="<%=request.getContextPath()%>/erweima">二维码</a></td>
 		</tr>
 	</table>
 	

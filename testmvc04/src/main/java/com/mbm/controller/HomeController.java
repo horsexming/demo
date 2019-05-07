@@ -1,13 +1,11 @@
 package com.mbm.controller;
 
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JFrame;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,16 +13,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mbm.domian.Factory;
 import com.mbm.domian.Tgoods;
 import com.mbm.services.TgoodService;
 import com.mbm.services.factoryservices.FactoryServices;
+import com.mbm.util.erweima.Erweima;
 import com.mbm.util.tongjitu.EchartData;
 import com.mbm.util.tongjitu.Series;
-
 @Controller
 public class HomeController {
 	//系统首页模块
@@ -165,5 +162,19 @@ public class HomeController {
 		     EchartData data = new EchartData(legend, category, series);
 		     return data;
 		 }
+		@RequestMapping("/baohan")
+		public String baohan() {		
+			return "util/baohan";
+		}
+		
+		@RequestMapping("/erweima")
+		public String erweima(HttpServletRequest request ) {
+			Erweima erweima = new Erweima();
+			erweima.test(request);
+			return "util/erweima";
+		}
+		
+		
+		
 
 }
