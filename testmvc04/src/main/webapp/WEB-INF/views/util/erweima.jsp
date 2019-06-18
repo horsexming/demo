@@ -12,7 +12,7 @@
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
     System.out.println(basePath);
 %>  
-
 	<img src="/testmvc04/upload/aa.png">
+	<img src="D://QrCode/aa.png">
 </body>
 </html>

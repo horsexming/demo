@@ -23,6 +23,8 @@
 			<td><a href="<%=request.getContextPath()%>/zhe">折线图</a></td>
 			<td><a href="<%=request.getContextPath()%>/baohan">测试页面包含</a></td>
 			<td><a href="<%=request.getContextPath()%>/erweima">二维码</a></td>
+			<td><a href="<%=request.getContextPath()%>/jindut">进度条</a></td>
+			<td><a href="<%=request.getContextPath()%>/testjs">测试js</a></td>
 		</tr>
 	</table>
 	

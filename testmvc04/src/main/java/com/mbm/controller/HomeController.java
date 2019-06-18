@@ -156,9 +156,9 @@ public class HomeController {
 		         category.add(totalNum.getGoodsName());
 		         serisData.add(totalNum.getGoodsT());
 		     }
-		     List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "总数" }));// 数据分组
+		     List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "阅读数" }));// 数据分组
 		     List<Series> series = new ArrayList<Series>();// 纵坐标
-		     series.add(new Series("总数", "line", serisData));		
+		     series.add(new Series("阅读数", "line", serisData));		
 		     EchartData data = new EchartData(legend, category, series);
 		     return data;
 		 }
@@ -172,6 +172,15 @@ public class HomeController {
 			Erweima erweima = new Erweima();
 			erweima.test(request);
 			return "util/erweima";
+		}
+		
+		@RequestMapping("/jindut")
+		public String jindut() {		
+			return "jindutiao/jindut";
+		}
+		@RequestMapping("/testjs")
+		public String testjs() {		
+			return "testjs/testjs";
 		}
 		
 		

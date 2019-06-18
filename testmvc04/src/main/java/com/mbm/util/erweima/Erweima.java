@@ -81,14 +81,14 @@ public class Erweima {
     }
     
     public String test(HttpServletRequest request){
-   	 String imgPath=request.getSession().getServletContext().getRealPath("/upload")
+   String imgPath=request.getSession().getServletContext().getRealPath("/upload")
    			 + "/"+"aa.png";
-   	 File newFile=new File(imgPath);
+   File newFile=new File(imgPath);
    	 if(newFile.isDirectory()==false){
    		 newFile.delete();
    	 }
-	 String encoderContent = "姓名：" +"cc"+"\n工号： "+"aa"+ "\n部门 :"+"aa"+"\n职务:"+"aa";  
-	 Erweima handler = new Erweima();  
+	String encoderContent = "姓名：" +"6c"+"\n工号： "+"aa"+ "\n部门 :"+"aa"+"\n职务:"+"aa";
+	Erweima handler = new Erweima();  
     handler.encoderQRCode(encoderContent, imgPath, "png");  
     return "saveOK";
    }
